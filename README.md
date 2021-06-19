@@ -3,4 +3,4 @@ A terrible shell script to automate making DOS floppies on Linux while using USB
 
 Save in your favorite location and add an alias to your shells running config.
 
-![alt text](https://raw.githubusercontent.com/Akira-Hojo/format-a-4-linux/main/screenshots/screenshot.png?token=AQUK6VE6BR2LK5F6GL4CJIDAZ2AJA?raw=true)
+![screenshot](https://user-images.githubusercontent.com/69775188/122657991-50dc8300-d136-11eb-891b-9b52e5ef88c4.png)
