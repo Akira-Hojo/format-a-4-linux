@@ -93,7 +93,7 @@ while diskselect=1; do
             done
 
             if formatme=1; then
-                printf "\nUnmounting if needed...\n\n"
+                printf "\nUnmounting if needed...\n"
                 printf "\nRunning Format...\n\n"
 
                 formatter="$(sudo ufiformat -f $format -v $device 2>&1)"
@@ -112,7 +112,7 @@ while diskselect=1; do
 
             fi
             ;;
-            
+
         esac
     done
 done
