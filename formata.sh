@@ -94,6 +94,7 @@ while diskselect=1; do
 
             if formatme=1; then
                 printf "\nUnmounting if needed...\n"
+                sudo unmount $device
                 printf "\nRunning Format...\n\n"
 
                 formatter="$(sudo ufiformat -f $format -v $device 2>&1)"
