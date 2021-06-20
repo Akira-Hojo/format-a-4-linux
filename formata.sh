@@ -45,7 +45,7 @@ if ! command -v ufiformat &>/dev/null; then
 fi
 
 printf "ufiformat found, continuing...\n\n"
-sleep .5
+sleep .3
 printf "**** Drives Avaialble ****\n"
 
 diskselect=1
@@ -67,14 +67,28 @@ while diskselect=1; do
             formattypes=("1440" "1232" "1200" "720" "640")
             printf "\nSelect format type (Kb)\n"
 
-            select format in ${formattypes[@]}; do
-                printf ""
+            select format in "Quick Format DOS FAT" ${formattypes[@]}; do
+                case $format in
+                Quick*)
+                    formatme=0
+                    break
+                    ;;
+                ${formattypes[@]})
+                    formatme=1
+                    break
+                    ;;
+                esac
                 break
             done
 
-            printf "\nYou have selected $device to be formatted as a $format Kb floppy disk\n"
+            if [[ $formatme = "0" ]]; then
+                printf "\nQuick Formatting Floppy as DOS FAT\n"
+            else
+                printf "\nYou have selected $device to be formatted as a $format Kb floppy disk\n"
+            fi
+
             printf "\n****************************************\n"
-            printf "\n**** WARNING: ALL DATA WILL BE LOST ON SELECTED DISK PLEASE PROCEED WITH CAUTION ****\n"
+            printf "\nWARNING: ALL DATA WILL BE LOST ON DISK PLEASE PROCEED WITH CAUTION\n"
             printf "\n****************************************\n\n"
 
             select yn in "Yes, I understand" "No!!! STOP!!!"; do
@@ -82,7 +96,6 @@ while diskselect=1; do
                 Yes*)
 
                     printf "\nOK you asked for it...\n"
-                    formatme=1
                     break
                     ;;
                 No*)
@@ -92,26 +105,31 @@ while diskselect=1; do
                 esac
             done
 
-            if formatme=1; then
-                printf "\nUnmounting if needed...\n"
-                sudo umount $device
-                printf "\nRunning Format...\n\n"
+            printf "\nUnmounting if needed...\n"
+            sudo umount $device
 
+            if [[ $formatme != "0" ]]; then
+                printf "\nRunning Format...\n\n"
                 formatter="$(sudo ufiformat -f $format -v $device 2>&1)"
-                echo $formatter
+                for f in $formatter; do
+                    echo $f
+                done
                 if [[ $formatter = *'media type mismatch'* ]]; then
                     printf "\nMedia type error, please see that you are using the correct density disk...\n\n"
                     printf "\nExiting...\n"
                     exit
                 fi
 
-                printf "\nMaking Filesystem...\n\n"
-                sudo mkfs.msdos $device
-                sleep 10
-                printf $'\a'
-                exit
-
             fi
+
+            printf "\nMaking Filesystem...\n\n"
+            sudo mkfs.msdos $device
+            sleep 10
+            printf $'\a'
+            printf $'\a'
+            printf $'\a'
+            printf "\nAll done! Exiting!\n\n"
+            exit
             ;;
 
         esac
